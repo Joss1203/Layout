@@ -2,6 +2,7 @@
 /config.example.php
 /database/*.sqlite
 /database/*.sqlite-shm
+/database/*.sql
 /database/*.sqlite-wal
 /HTML/admin/uploads/*
 !/HTML/admin/uploads/.htaccess
