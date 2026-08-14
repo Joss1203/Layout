@@ -23,6 +23,6 @@ Aplicación web para consultar, reservar y administrar pabellones, chalets y esp
 - Producción MySQL: `pdo_mysql`.
 
 
-## Visualizar
+## Visualizar pagina funcional
 
 [Pabellones](https://ver-pabellones.famex-mex.com/)
