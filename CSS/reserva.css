@@ -1,0 +1,256 @@
+:root {
+  --navy: #102657;
+  --blue: #285cd6;
+  --line: #d7e0ef;
+  --ink: #13213a;
+  --sky-dark: #061633;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at 18% 16%, #ffffff17 0 0.35rem, transparent 0.42rem),
+    linear-gradient(135deg, #061633, #123b75 48%, #0b244c);
+}
+.reservation-page {
+  min-height: 100vh;
+  padding: 32px 16px;
+  position: relative;
+  overflow: hidden;
+}
+.reservation-page::before,
+.reservation-page::after {
+  position: fixed;
+  color: #ffffff24;
+  content: "✈";
+  font-size: 120px;
+  pointer-events: none;
+  transform: rotate(-18deg);
+}
+.reservation-page {
+  background-image:
+    repeating-linear-gradient(
+      118deg,
+      transparent 0 92px,
+      #ffffff08 93px 94px,
+      transparent 95px 182px
+    );
+}
+.reservation-page .reservation-form::before {
+  position: absolute;
+  inset: 18px 22px auto auto;
+  width: 230px;
+  height: 140px;
+  color: #285cd61a;
+  content: "✈  ✈  ✈\A   ✈  ✈\A ✈    ✈";
+  white-space: pre;
+  font-size: 30px;
+  line-height: 1.35;
+  pointer-events: none;
+}
+.reservation-page::before {
+  top: 42px;
+  left: 5vw;
+}
+.reservation-page::after {
+  right: 8vw;
+  bottom: 28px;
+  font-size: 150px;
+  transform: rotate(14deg);
+}
+.reservation-form {
+  width: min(980px, 100%);
+  margin: 0 auto;
+  padding: 28px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fffffff5;
+  box-shadow: 0 28px 90px #020b1d66;
+  position: relative;
+  z-index: 1;
+}
+.form-header {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 22px;
+}
+.form-header img {
+  width: 130px;
+}
+.form-header span {
+  color: var(--blue);
+  font-size: 0.75rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.form-header h1 {
+  margin: 3px 0 0;
+  color: var(--navy);
+}
+.form-success,
+.form-error {
+  margin: 0 0 18px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  font-weight: 800;
+}
+.form-success {
+  color: #086438;
+  background: #ddfbe9;
+}
+.form-error {
+  color: #8d182c;
+  background: #ffe5e9;
+}
+label,
+fieldset {
+  display: grid;
+  gap: 7px;
+  font-weight: 800;
+}
+input,
+select,
+textarea {
+  width: 100%;
+  border: 1px solid #bac7dc;
+  border-radius: 8px;
+  padding: 11px 12px;
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+}
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px #285cd61f;
+  outline: 0;
+}
+textarea {
+  resize: vertical;
+}
+.stand-number-field {
+  width: min(320px, 100%);
+  font-size: 0.82rem;
+}
+.stand-number-field input {
+  min-height: 38px;
+  padding: 8px 10px;
+  font-size: 0.95rem;
+  font-weight: 800;
+  color: #42516b;
+}
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 16px;
+}
+.phone-field span {
+  display: grid;
+  grid-template-columns: minmax(150px, 0.55fr) 1fr;
+  gap: 8px;
+}
+.full-field {
+  grid-column: 1 / -1;
+}
+.extra-stands {
+  margin-top: 18px;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #f7faff;
+}
+.check-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-right: 18px;
+}
+.check-row input {
+  width: auto;
+}
+.additional-stand-block {
+  display: grid;
+  gap: 12px;
+  margin-top: 12px;
+}
+.additional-stand-rows {
+  display: grid;
+  gap: 12px;
+}
+.additional-stand-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) auto;
+  align-items: end;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid #dce5f3;
+  border-radius: 8px;
+  background: #fff;
+}
+.secondary-action,
+.remove-stand-row {
+  border: 1px solid #b8c8e3;
+  border-radius: 8px;
+  padding: 10px 12px;
+  background: #fff;
+  color: var(--blue);
+  font: inherit;
+  font-weight: 900;
+  cursor: pointer;
+}
+.secondary-action {
+  justify-self: start;
+}
+.remove-stand-row {
+  color: #8b1d2c;
+  border-color: #efc7cf;
+}
+.secondary-action:hover,
+.remove-stand-row:hover {
+  background: #eef4ff;
+}
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 22px;
+}
+.form-actions button {
+  border: 0;
+  border-radius: 8px;
+  padding: 12px 18px;
+  background: var(--blue);
+  color: #fff;
+  font: inherit;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 12px 28px #285cd633;
+}
+.form-actions button:hover {
+  background: #1f4fc2;
+}
+@media (max-width: 720px) {
+  .reservation-form {
+    padding: 20px;
+  }
+  .form-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .form-grid,
+  .phone-field span,
+  .additional-stand-block,
+  .additional-stand-row {
+    grid-template-columns: 1fr;
+  }
+  .remove-stand-row {
+    width: 100%;
+  }
+}

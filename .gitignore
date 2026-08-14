@@ -1,0 +1,10 @@
+/config.php
+/config.example.php
+/database/*.sqlite
+/database/*.sqlite-shm
+/database/*.sqlite-wal
+/HTML/admin/uploads/*
+!/HTML/admin/uploads/.htaccess
+!/HTML/admin/uploads/index.html
+/tools/php/
+/tools/*.zip

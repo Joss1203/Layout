@@ -1,0 +1,13 @@
+.contact-fields {
+  display: grid;
+  gap: 12px;
+  margin: 4px 0;
+  padding: 16px;
+  border: 1px solid #ccd5e2;
+  border-radius: 10px;
+}
+.contact-fields legend {
+  padding: 0 8px;
+  color: #102657;
+  font-weight: 800;
+}

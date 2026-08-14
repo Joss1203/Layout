@@ -1,0 +1,26 @@
+.area-tools {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+.form-pair,
+.coordinate-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.sticky-properties {
+  position: sticky;
+  top: 18px;
+}
+.area-canvas > #areaBoxes {
+  touch-action: none;
+}
+@media (max-width: 800px) {
+  .area-tools {
+    grid-template-columns: 1fr;
+  }
+  .sticky-properties {
+    position: static;
+  }
+}

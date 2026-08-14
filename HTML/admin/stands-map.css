@@ -1,0 +1,7 @@
+.management-space .uncategorized {
+  stroke: #64748b;
+  stroke-dasharray: 6 4;
+}
+.mini-legend .uncategorized {
+  background: #e5e7eb;
+}
