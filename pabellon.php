@@ -46,7 +46,7 @@ $sesionActiva = !empty($_SESSION["usuario_id"]);
                 aria-label="Iniciar sesión"
                 title="Iniciar sesión"
             >
-                <span class="login-arrow-icon" aria-hidden="true"></span>
+                <span class="login-text">Login</span>
             </a>
         <?php endif; ?>
     </header>

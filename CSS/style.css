@@ -156,49 +156,10 @@ input {
   background: #eef6ff;
 }
 
-/* Flecha */
-.login-arrow-icon {
-  position: relative;
-
-  width: 48px;
-  height: 30px;
-
-  display: inline-block;
-}
-
-/* Línea horizontal */
-.login-arrow-icon::before {
-  content: "";
-
-  position: absolute;
-  left: 0;
-  top: 50%;
-
-  width: 40px;
-  height: 7px;
-
-  background: #fff;
-  border-radius: 999px;
-
-  transform: translateY(-50%);
-}
-
-/* Punta de la flecha */
-.login-arrow-icon::after {
-  content: "";
-
-  position: absolute;
-  right: 0;
-  top: 50%;
-
-  width: 18px;
-  height: 18px;
-
-  border-top: 7px solid #fff;
-  border-right: 7px solid #fff;
-  border-radius: 3px;
-
-  transform: translateY(-50%) rotate(45deg);
+.login-text {
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1;
 }
 .landing {
   width: min(1180px, calc(100% - 32px));
@@ -487,18 +448,8 @@ dialog::backdrop {
 
 
 
-  .login-arrow-icon {
-    width: 32px;
-    height: 22px;
-  }
-  .login-arrow-icon::before {
-    width: 27px;
-    height: 5px;
-  }
-  .login-arrow-icon::after {
-    width: 13px;
-    height: 13px;
-    border-width: 5px;
+  .login-text {
+    font-size: 0.68rem;
   }
   .footer-access-link {
     display: flex;
