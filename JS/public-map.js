@@ -90,15 +90,21 @@ document.addEventListener("DOMContentLoaded", async () => {
       ] || "uncategorized";
     const standNumberLabel = (s) => {
       const mapScale = Math.max(1, Number(window.PAVILION_WIDTH || 696) / 696);
-      const compactLabel = ["A", "B", "C"].includes(
-        String(window.PAVILION_KEY || "").toUpperCase(),
-      );
+      const pavilionKey = String(window.PAVILION_KEY || "").toUpperCase();
+      const compactLabel = ["A", "B", "C"].includes(pavilionKey);
+      const chaletLabel = pavilionKey === "CH";
       const padding = (compactLabel ? 3 : 6) * mapScale;
-      const x = Number(s.x) + Number(s.ancho) - padding;
-      const y = Number(s.y) + padding;
-      const size = (compactLabel ? 6.5 : 10) * mapScale;
+      const x = chaletLabel
+        ? Number(s.x) + Number(s.ancho) / 2
+        : Number(s.x) + Number(s.ancho) - padding;
+      const y = chaletLabel
+        ? Number(s.y) + Number(s.alto) / 2
+        : Number(s.y) + padding;
+      const size = chaletLabel ? 10 : (compactLabel ? 6.5 : 10) * mapScale;
+      const textAnchor = chaletLabel ? "middle" : "end";
+      const baseline = chaletLabel ? "middle" : "hanging";
 
-      return `<text class="stand-number-label" x="${x}" y="${y}" font-size="${size}" text-anchor="end" dominant-baseline="hanging" pointer-events="none">${esc(s.numero)}</text>`;
+      return `<text class="stand-number-label" x="${x}" y="${y}" font-size="${size}" text-anchor="${textAnchor}" dominant-baseline="${baseline}" pointer-events="none">${esc(s.numero)}</text>`;
     };
     overlay.innerHTML = stands
       .filter((s) => s.x !== null)
