@@ -1,4 +1,4 @@
-|<?php
+<?php
 require __DIR__ . "/includes/conexion.php";
 
 $stand = trim($_GET["stand"] ?? "");

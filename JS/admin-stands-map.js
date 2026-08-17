@@ -42,13 +42,13 @@ document.addEventListener("DOMContentLoaded", async () => {
   const standNumberLabel = (s) => {
     // Normaliza la etiqueta para planos con viewBox de distinta resolución.
     const mapScale = Math.max(1, Number(window.MANAGEMENT_PAVILION_WIDTH || 696) / 696);
-    const compactLabel = ["A", "B", "C"].includes(
-      String(window.MANAGEMENT_PAVILION_KEY || "").toUpperCase(),
-    );
+    const pavilionKey = String(window.MANAGEMENT_PAVILION_KEY || "").toUpperCase();
+    const compactLabel = ["A", "B", "C"].includes(pavilionKey);
+    const enlargedTopLabel = ["D", "E"].includes(pavilionKey);
     const padding = (compactLabel ? 3 : 6) * mapScale;
     const x = Number(s.x) + Number(s.ancho) - padding;
     const y = Number(s.y) + padding;
-    const size = (compactLabel ? 6.5 : 10) * mapScale;
+    const size = (compactLabel ? 6.5 : enlargedTopLabel ? 14 : 10) * mapScale;
 
     return `<text class="stand-number-label" x="${x}" y="${y}" font-size="${size}" text-anchor="end" dominant-baseline="hanging" pointer-events="none">${esc(s.numero)}</text>`;
   };

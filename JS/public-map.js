@@ -92,6 +92,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       const mapScale = Math.max(1, Number(window.PAVILION_WIDTH || 696) / 696);
       const pavilionKey = String(window.PAVILION_KEY || "").toUpperCase();
       const compactLabel = ["A", "B", "C"].includes(pavilionKey);
+      const enlargedTopLabel = ["D", "E"].includes(pavilionKey);
       const chaletLabel = pavilionKey === "CH";
       const padding = (compactLabel ? 3 : 6) * mapScale;
       const x = chaletLabel
@@ -100,7 +101,9 @@ document.addEventListener("DOMContentLoaded", async () => {
       const y = chaletLabel
         ? Number(s.y) + Number(s.alto) / 2
         : Number(s.y) + padding;
-      const size = chaletLabel ? 10 : (compactLabel ? 6.5 : 10) * mapScale;
+      const size = chaletLabel
+        ? 10
+        : (compactLabel ? 6.5 : enlargedTopLabel ? 14 : 10) * mapScale;
       const textAnchor = chaletLabel ? "middle" : "end";
       const baseline = chaletLabel ? "middle" : "hanging";
 
