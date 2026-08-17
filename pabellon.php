@@ -167,6 +167,6 @@ $sesionActiva = !empty($_SESSION["usuario_id"]);
         window.PAVILION_WIDTH = <?= (int) $p["ancho"] ?>;
         window.EDIT_URL = <?= json_encode($rol ? "HTML/admin/editar_stand.php?id=" : null) ?>;
     </script>
-    <script src="JS/public-map.js"></script>
+    <script src="JS/public-map.js?v=<?= filemtime(__DIR__ . "/JS/public-map.js") ?>"></script>
 </body>
 </html>

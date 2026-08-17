@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
     layer.innerHTML = zones
       .map(
         (z) =>
-          `<button type="button" aria-label="Zona ${z.nombre}" class="area-box ${String(z.id) === select.value ? "selected" : ""}" data-id="${z.id}"><span>${z.clave}</span><i title="Cambiar tamaño"></i></button>`,
+          `<button type="button" aria-label="Zona ${z.nombre}" class="area-box ${String(z.id) === select.value ? "selected" : ""}" data-id="${z.id}"><i title="Cambiar tamaño"></i></button>`,
       )
       .join("");
     layer.querySelectorAll(".area-box").forEach((box) =>

@@ -212,6 +212,6 @@ if ($ok): ?><div class="admin-success"><?= htmlspecialchars(
     JSON_UNESCAPED_UNICODE,
 ) ?>;
 </script>
-<script src="../../JS/area-editor.js"></script>
+<script src="../../JS/area-editor.js?v=<?= filemtime(__DIR__ . "/../../JS/area-editor.js") ?>"></script>
 </body>
 </html>

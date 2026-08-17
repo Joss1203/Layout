@@ -39,6 +39,41 @@ try {
     error_log($e->getMessage());
     exit("No fue posible conectar con la base de datos. Revise config.php.");
 }
+function columnaExiste(PDO $db, string $driver, string $tabla, string $columna): bool
+{
+    if ($driver === "sqlite") {
+        $cols = array_column(
+            $db->query("PRAGMA table_info($tabla)")->fetchAll(),
+            "name",
+        );
+    } else {
+        $cols = array_column(
+            $db->query("SHOW COLUMNS FROM $tabla")->fetchAll(),
+            "Field",
+        );
+    }
+
+    return in_array($columna, $cols, true);
+}
+
+function asegurarNumeroFontSize(PDO $db, string $driver): bool
+{
+    try {
+        if (columnaExiste($db, $driver, "stands", "numero_font_size")) {
+            return true;
+        }
+
+        $def = $driver === "sqlite"
+            ? "numero_font_size REAL"
+            : "numero_font_size DECIMAL(10,3) NULL";
+        $db->exec("ALTER TABLE stands ADD COLUMN $def");
+        return true;
+    } catch (Throwable $e) {
+        error_log($e->getMessage());
+        return false;
+    }
+}
+
 function inicializarBaseDatos(PDO $db, string $driver): void
 {
     $auto =
@@ -55,7 +90,7 @@ function inicializarBaseDatos(PDO $db, string $driver): void
         "CREATE TABLE IF NOT EXISTS configuracion (clave VARCHAR(80) PRIMARY KEY,valor TEXT NULL)",
     );
     $db->exec(
-        "CREATE TABLE IF NOT EXISTS stands (id $auto,pabellon_id INTEGER NULL,clave VARCHAR(40) NOT NULL UNIQUE,numero VARCHAR(40) NOT NULL,categoria VARCHAR(40) NOT NULL DEFAULT 'Premium',estado VARCHAR(20) NOT NULL DEFAULT 'Disponible',empresa VARCHAR(160) NULL,logo VARCHAR(255) NULL,contacto VARCHAR(160) NULL,email VARCHAR(160) NULL,telefono VARCHAR(60) NULL,x DECIMAL(10,3) NULL,y DECIMAL(10,3) NULL,ancho DECIMAL(10,3) NULL,alto DECIMAL(10,3) NULL,bloqueado INTEGER NOT NULL DEFAULT 0)",
+        "CREATE TABLE IF NOT EXISTS stands (id $auto,pabellon_id INTEGER NULL,clave VARCHAR(40) NOT NULL UNIQUE,numero VARCHAR(40) NOT NULL,categoria VARCHAR(40) NOT NULL DEFAULT 'Premium',estado VARCHAR(20) NOT NULL DEFAULT 'Disponible',empresa VARCHAR(160) NULL,logo VARCHAR(255) NULL,contacto VARCHAR(160) NULL,email VARCHAR(160) NULL,telefono VARCHAR(60) NULL,x DECIMAL(10,3) NULL,y DECIMAL(10,3) NULL,ancho DECIMAL(10,3) NULL,alto DECIMAL(10,3) NULL,numero_font_size DECIMAL(10,3) NULL,bloqueado INTEGER NOT NULL DEFAULT 0)",
     );
     $db->exec(
         "CREATE TABLE IF NOT EXISTS solicitudes_reserva (id $auto,stand VARCHAR(80) NOT NULL,empresa VARCHAR(180) NOT NULL,rfc VARCHAR(13) NOT NULL,lada VARCHAR(10) NOT NULL,telefono VARCHAR(60) NOT NULL,direccion TEXT NOT NULL,ciudad VARCHAR(120) NOT NULL,pais VARCHAR(120) NOT NULL,codigo_postal VARCHAR(30) NOT NULL,correo VARCHAR(180) NOT NULL,web VARCHAR(180) NULL,operacion VARCHAR(40) NOT NULL,stands_adicionales TEXT NULL,representante VARCHAR(160) NOT NULL,puesto VARCHAR(120) NOT NULL,lada_representante VARCHAR(10) NOT NULL,telefono_representante VARCHAR(60) NOT NULL,comentarios TEXT NULL,estado VARCHAR(20) NOT NULL DEFAULT 'Pendiente',creado_en DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,actualizado_en DATETIME NULL)",
@@ -83,6 +118,7 @@ function inicializarBaseDatos(PDO $db, string $driver): void
                 $db->exec("ALTER TABLE stands ADD COLUMN $def");
             }
         }
+        asegurarNumeroFontSize($db, $driver);
         $pcols = array_column(
             $db->query("PRAGMA table_info(pabellones)")->fetchAll(),
             "name",
@@ -112,6 +148,7 @@ function inicializarBaseDatos(PDO $db, string $driver): void
                 $db->exec("ALTER TABLE stands ADD COLUMN $def");
             }
         }
+        asegurarNumeroFontSize($db, $driver);
         $pcols = array_column(
             $db->query("SHOW COLUMNS FROM pabellones")->fetchAll(),
             "Field",

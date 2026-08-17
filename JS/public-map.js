@@ -101,9 +101,10 @@ document.addEventListener("DOMContentLoaded", async () => {
       const y = chaletLabel
         ? Number(s.y) + Number(s.alto) / 2
         : Number(s.y) + padding;
-      const size = chaletLabel
+      const defaultSize = chaletLabel
         ? 10
         : (compactLabel ? 6.5 : enlargedTopLabel ? 14 : 10) * mapScale;
+      const size = Number(s.numero_font_size) || defaultSize;
       const textAnchor = chaletLabel ? "middle" : "end";
       const baseline = chaletLabel ? "middle" : "hanging";
 

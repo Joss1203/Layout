@@ -3,9 +3,13 @@ declare(strict_types=1);
 header("Content-Type: application/json; charset=utf-8");
 header("Cache-Control: no-store, no-cache, must-revalidate");
 require __DIR__ . "/../conexion.php";
+$tieneNumeroFontSize = asegurarNumeroFontSize($conexion, $config["driver"] ?? "sqlite");
 $p = (int) ($_GET["pabellon"] ?? 0);
+$numeroFontSizeSelect = $tieneNumeroFontSize
+    ? "numero_font_size"
+    : "NULL AS numero_font_size";
 $sql =
-    "SELECT id,clave,numero,categoria,estado,empresa,logo,contacto,email,telefono,x,y,ancho,alto,bloqueado FROM stands" .
+    "SELECT id,clave,numero,categoria,estado,empresa,logo,contacto,email,telefono,x,y,ancho,alto,$numeroFontSizeSelect,bloqueado FROM stands" .
     ($p ? " WHERE pabellon_id=?" : "") .
     " ORDER BY numero";
 $s = $conexion->prepare($sql);

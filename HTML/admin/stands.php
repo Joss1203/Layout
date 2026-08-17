@@ -180,7 +180,7 @@ $stands = array_values(array_filter($stands, static function (array $stand) use 
             <script>
                 window.MANAGEMENT_PAVILION_WIDTH = <?= (int) $pabellon["ancho"] ?>;
             </script>
-            <script src="../../JS/admin-stands-map.js"></script>
+            <script src="../../JS/admin-stands-map.js?v=<?= filemtime(__DIR__ . "/../../JS/admin-stands-map.js") ?>"></script>
         <?php endif; ?>
 
         <section class="admin-panel">

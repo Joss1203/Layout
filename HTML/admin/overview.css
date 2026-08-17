@@ -47,6 +47,10 @@
 }
 .area-box {
   position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
   border: 3px solid #fff;
   background: #2e6de622;
   color: #fff;
@@ -56,11 +60,6 @@
 .area-box.selected {
   background: #30bce855;
   border-color: #30bce8;
-}
-.area-box span {
-  font-size: clamp(11px, 1.5vw, 22px);
-  font-weight: 900;
-  text-shadow: 0 1px 4px #000;
 }
 .area-box i {
   position: absolute;

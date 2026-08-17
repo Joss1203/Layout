@@ -3,6 +3,7 @@ require __DIR__ . "/../../includes/validar_sesion.php";
 exigirAdmin();
 require __DIR__ . "/../../includes/conexion.php";
 require __DIR__ . "/../../includes/seguridad.php";
+$numeroFontSizeDisponible = asegurarNumeroFontSize($conexion, $config["driver"] ?? "sqlite");
 header("Cache-Control: no-store, no-cache, must-revalidate");
 $pid = (int) ($_GET["id"] ?? ($_POST["pabellon_id"] ?? 0));
 $s = $conexion->prepare("SELECT * FROM pabellones WHERE id=?");
@@ -51,6 +52,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $clave = strtoupper(
             preg_replace("/[^A-Z0-9]/i", "", $p["clave"] . $numero),
         );
+        $numeroFontSizeRaw = trim($_POST["numero_font_size"] ?? "");
+        $numeroFontSize = $numeroFontSizeDisponible && $numeroFontSizeRaw !== ""
+            ? min(120, max(4, (float) $numeroFontSizeRaw))
+            : null;
         $vals = [
             $clave,
             $numero,
@@ -61,18 +66,27 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             round((float) $_POST["y"], 1),
             round(max(5, (float) $_POST["ancho"]), 1),
             round(max(5, (float) $_POST["alto"]), 1),
-            $pid,
         ];
-        if ($id) {
-            $q = $conexion->prepare(
-                "UPDATE stands SET clave=?,numero=?,categoria=?,x=?,y=?,ancho=?,alto=? WHERE pabellon_id=? AND id=?",
+        if ($numeroFontSizeDisponible) {
+            $vals[] = $numeroFontSize;
+        } elseif ($numeroFontSizeRaw !== "") {
+            throw new RuntimeException(
+                "Hostinger no permitió crear la columna numero_font_size. Ejecuta: ALTER TABLE stands ADD COLUMN numero_font_size DECIMAL(10,3) NULL;",
             );
+        }
+        $vals[] = $pid;
+        if ($id) {
+            $sql = $numeroFontSizeDisponible
+                ? "UPDATE stands SET clave=?,numero=?,categoria=?,x=?,y=?,ancho=?,alto=?,numero_font_size=? WHERE pabellon_id=? AND id=?"
+                : "UPDATE stands SET clave=?,numero=?,categoria=?,x=?,y=?,ancho=?,alto=? WHERE pabellon_id=? AND id=?";
+            $q = $conexion->prepare($sql);
             $vals[] = $id;
             $q->execute($vals);
         } else {
-            $q = $conexion->prepare(
-                "INSERT INTO stands (clave,numero,categoria,x,y,ancho,alto,pabellon_id,estado,bloqueado) VALUES (?,?,?,?,?,?,?,?,'Disponible',0)",
-            );
+            $sql = $numeroFontSizeDisponible
+                ? "INSERT INTO stands (clave,numero,categoria,x,y,ancho,alto,numero_font_size,pabellon_id,estado,bloqueado) VALUES (?,?,?,?,?,?,?,?,?,'Disponible',0)"
+                : "INSERT INTO stands (clave,numero,categoria,x,y,ancho,alto,pabellon_id,estado,bloqueado) VALUES (?,?,?,?,?,?,?,?,'Disponible',0)";
+            $q = $conexion->prepare($sql);
             $q->execute($vals);
             $id = (int) $conexion->lastInsertId();
         }
@@ -154,6 +168,12 @@ $stands = $q->fetchAll();
         <input type="hidden" name="action" value="save">
         <label>Número<input name="numero" placeholder="Ej. A-01" required>
         </label>
+        <label>Tamaño número<input name="numero_font_size" type="number" min="4" max="120" step="1" placeholder="Auto">
+        </label>
+        <div class="bulk-font-control">
+            <label>Tamaño para todos<input id="globalNumberFontSize" type="number" min="4" max="120" step="1" placeholder="Ej. 12"></label>
+            <button type="button" id="applyGlobalNumberFont" class="admin-btn secondary">Aplicar a todos</button>
+        </div>
         <label>Categoría<select name="categoria">
             <option>Premium</option>
             <option value="Estandar">Estándar</option>
@@ -182,6 +202,6 @@ $stands = $q->fetchAll();
     JSON_UNESCAPED_UNICODE,
 ) ?>};
 </script>
-<script src="../../JS/map-editor.js"></script>
+<script src="../../JS/map-editor.js?v=<?= filemtime(__DIR__ . "/../../JS/map-editor.js") ?>"></script>
 </body>
 </html>

@@ -5,6 +5,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const advancedButton = document.querySelector("#advancedEdit");
   const saveButton = document.querySelector("#saveSelection");
   const deleteButton = document.querySelector("#deleteBox");
+  const globalFontInput = document.querySelector("#globalNumberFontSize");
+  const applyGlobalFontButton = document.querySelector("#applyGlobalNumberFont");
   const finishLink = document.querySelector("#finishEditor");
   const selectionStatus = document.querySelector("#selectionStatus");
   const coordinateNames = ["x", "y", "ancho", "alto"];
@@ -15,6 +17,9 @@ document.addEventListener("DOMContentLoaded", () => {
     y: Number(stand.y),
     ancho: Number(stand.ancho),
     alto: Number(stand.alto),
+    numero_font_size: stand.numero_font_size === null || stand.numero_font_size === undefined
+      ? ""
+      : Number(stand.numero_font_size),
   }));
   let selectedStand = null;
   let selectedKeys = new Set();
@@ -84,7 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function clearFields() {
-    for (const name of ["stand_id", "numero", ...coordinateNames]) {
+    for (const name of ["stand_id", "numero", "numero_font_size", ...coordinateNames]) {
       form[name].value = "";
     }
     form.categoria.value = "Premium";
@@ -99,6 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
     form.stand_id.value = selectedStand.id || "";
     form.numero.value = selectedStand.numero || "";
     form.categoria.value = categoryValue(selectedStand.categoria);
+    form.numero_font_size.value = selectedStand.numero_font_size || "";
     coordinateNames.forEach((name) => {
       form[name].value = rounded(selectedStand[name]);
     });
@@ -147,6 +153,7 @@ document.addEventListener("DOMContentLoaded", () => {
               ? `<rect data-id="${key}" data-handle="resize" x="${stand.x + stand.ancho - 6}" y="${stand.y + stand.alto - 6}" width="12" height="12" class="editor-resize-handle"><title>Ajustar tamaño</title></rect>`
               : "";
 
+          const numberSize = Number(stand.numero_font_size) || Math.max(6, Math.min(18, stand.alto * 0.28));
           return `
             <g>
               <rect
@@ -159,6 +166,15 @@ document.addEventListener("DOMContentLoaded", () => {
               >
                 <title>${escapeText(stand.numero)}</title>
               </rect>
+              <text
+                class="editor-number-label"
+                x="${stand.x + stand.ancho / 2}"
+                y="${stand.y + stand.alto / 2}"
+                font-size="${numberSize}"
+                text-anchor="middle"
+                dominant-baseline="middle"
+                pointer-events="none"
+              >${escapeText(stand.numero)}</text>
               ${resizeHandle}
             </g>
           `;
@@ -331,6 +347,7 @@ document.addEventListener("DOMContentLoaded", () => {
         y: draft.y,
         ancho: draft.ancho,
         alto: draft.alto,
+        numero_font_size: "",
       };
       data.push(newStand);
       selectedStand = newStand;
@@ -378,12 +395,15 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  for (const field of [form.numero, form.categoria]) {
+  for (const field of [form.numero, form.categoria, form.numero_font_size]) {
     field.addEventListener("input", () => {
       if (!selectedStand) return;
 
       selectedStand.numero = form.numero.value.trim();
       selectedStand.categoria = form.categoria.value;
+      selectedStand.numero_font_size = form.numero_font_size.value
+        ? Math.min(120, Math.max(4, Number(form.numero_font_size.value)))
+        : "";
       markDirty(selectedStand);
     });
   }
@@ -393,6 +413,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     selectedStand.numero = form.numero.value.trim();
     selectedStand.categoria = form.categoria.value;
+    selectedStand.numero_font_size = form.numero_font_size.value
+      ? Math.min(120, Math.max(4, Number(form.numero_font_size.value)))
+      : "";
     coordinateNames.forEach((name) => {
       form[name].value = rounded(form[name].value);
       selectedStand[name] = Number(form[name].value);
@@ -414,6 +437,7 @@ document.addEventListener("DOMContentLoaded", () => {
     formData.set("action", "save");
     formData.set("numero", stand.numero);
     formData.set("categoria", stand.categoria || "Premium");
+    formData.set("numero_font_size", stand.numero_font_size || "");
     coordinateNames.forEach((name) => {
       formData.set(name, rounded(stand[name]));
     });
@@ -434,6 +458,9 @@ document.addEventListener("DOMContentLoaded", () => {
       y: Number(result.stand.y),
       ancho: Number(result.stand.ancho),
       alto: Number(result.stand.alto),
+      numero_font_size: result.stand.numero_font_size === null || result.stand.numero_font_size === undefined
+        ? ""
+        : Number(result.stand.numero_font_size),
     };
     Object.assign(stand, saved, { temporary: false });
     delete stand.tempId;
@@ -463,12 +490,48 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  applyGlobalFontButton?.addEventListener("click", async () => {
+    if (saving) return;
+
+    const raw = globalFontInput.value.trim();
+    if (raw === "") {
+      alert("Escribe un tamaño para aplicarlo a todos.");
+      globalFontInput.focus();
+      return;
+    }
+
+    const nextSize = Math.min(120, Math.max(4, Number(raw)));
+    if (!Number.isFinite(nextSize)) {
+      alert("Escribe un tamaño válido.");
+      globalFontInput.focus();
+      return;
+    }
+
+    data.forEach((stand) => {
+      stand.numero_font_size = nextSize;
+      dirtyKeys.add(keyOf(stand));
+    });
+    if (selectedStand) form.numero_font_size.value = String(nextSize);
+    setDirty(true);
+    refresh();
+
+    try {
+      await savePendingChanges();
+      selectionStatus.textContent = `Tamaño ${nextSize} aplicado a todos los números.`;
+    } catch (error) {
+      alert(error.message || "No fue posible guardar el tamaño para todos.");
+    }
+  });
+
   form.addEventListener("submit", async (event) => {
     event.preventDefault();
     if (!selectedStand || saving) return;
 
     selectedStand.numero = form.numero.value.trim();
     selectedStand.categoria = form.categoria.value;
+    selectedStand.numero_font_size = form.numero_font_size.value
+      ? Math.min(120, Math.max(4, Number(form.numero_font_size.value)))
+      : "";
     coordinateNames.forEach((name) => {
       form[name].value = rounded(form[name].value);
       selectedStand[name] = Number(form[name].value);
@@ -495,6 +558,9 @@ document.addEventListener("DOMContentLoaded", () => {
         y: Number(result.stand.y),
         ancho: Number(result.stand.ancho),
         alto: Number(result.stand.alto),
+        numero_font_size: result.stand.numero_font_size === null || result.stand.numero_font_size === undefined
+          ? ""
+          : Number(result.stand.numero_font_size),
       };
       if (wasTemporary) selectedKeys.delete(keyOf(selectedStand));
       Object.assign(selectedStand, saved, { temporary: false });

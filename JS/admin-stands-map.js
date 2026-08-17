@@ -48,7 +48,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const padding = (compactLabel ? 3 : 6) * mapScale;
     const x = Number(s.x) + Number(s.ancho) - padding;
     const y = Number(s.y) + padding;
-    const size = (compactLabel ? 6.5 : enlargedTopLabel ? 14 : 10) * mapScale;
+    const defaultSize = (compactLabel ? 6.5 : enlargedTopLabel ? 14 : 10) * mapScale;
+    const size = Number(s.numero_font_size) || defaultSize;
 
     return `<text class="stand-number-label" x="${x}" y="${y}" font-size="${size}" text-anchor="end" dominant-baseline="hanging" pointer-events="none">${esc(s.numero)}</text>`;
   };
