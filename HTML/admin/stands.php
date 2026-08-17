@@ -80,7 +80,7 @@ $stands = array_values(array_filter($stands, static function (array $stand) use 
         <header class="admin-topbar">
             <h1>Gestionar espacios</h1>
             <nav class="admin-nav">
-                <a class="admin-btn secondary" href="dashboard.php">Panel general</a>
+                <a class="admin-btn secondary" href="dashboard.php"> Inicio</a>
                 <?php if ($rolActual === "admin" && $pid): ?>
                     <a class="admin-btn accent" href="editor_mapa.php?id=<?= $pid ?>">Editar recuadros</a>
                 <?php endif; ?>

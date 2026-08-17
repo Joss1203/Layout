@@ -131,7 +131,7 @@ $stands = $q->fetchAll();
             <button type="button" id="deleteBox" class="admin-btn danger" hidden>
                 Eliminar recuadro
             </button>
-                <a class="admin-btn secondary" id="finishEditor" href="pabellones.php">Volver</a>
+                <a class="admin-btn secondary" id="finishEditor" href="dashboard.php">Volver</a>
             </div>
         </header>
         <div class="editor-layout">

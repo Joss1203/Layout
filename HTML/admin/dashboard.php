@@ -41,7 +41,7 @@ $pabs = count($pabellones);
                 <a class="admin-btn accent" href="solicitudes.php">
                     Solicitudes <?= $solicitudesPendientes ? "(" . $solicitudesPendientes . ")" : "" ?>
                 </a>
-                <a class="admin-btn secondary" href="../../index.php">Vista del público</a>
+                <a class="admin-btn secondary" href="../../index.php">mapa compra</a>
                 <a class="admin-btn danger" href="logout.php">Salir</a>
             </nav>
         </header>
