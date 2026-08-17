@@ -28,5 +28,3 @@ Aplicación web para consultar, reservar y administrar pabellones, chalets y esp
 [Pabellones](https://ver-pabellones.famex-mex.com/)
 
 
-revisar
-https://skyblue-rabbit-592119.hostingersite.com/vista/chalets/page/registro.php?pabellon_id=CH-10
